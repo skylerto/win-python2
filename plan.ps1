@@ -18,10 +18,8 @@ function Invoke-Install {
   Write-Host "Installing to $pkg_prefix\bin"
   $dir="C:\Python27"
 
-  Write-Host "*** DOES OBEY TARGETDIR=$pkg_prefix\bin, WILL STRIP USERS PYTHON FROM $dir, 5 SECONDS TO STOP ***"
+  Write-Host "*** DOES NOT OBEY TARGETDIR=$pkg_prefix\bin, YOU WILL GET AN INSTALLATIoN OF PYTHON HERE $dir ***"
+  Start-Process -Wait -FilePath msiexec -ArgumentList /i, "$HAB_CACHE_SRC_PATH\python-$pkg_version.msi TARGETDIR=$dir", /qn, /l*v, "$PLAN_CONTEXT\install.log"
 
-  Start-Sleep -s 6
-
-  Start-Process -Wait -FilePath msiexec -ArgumentList /i, "$HAB_CACHE_SRC_PATH\python-$pkg_version.msi TARGETDIR=$pkg_prefix\bin", /qn, /l*v, "$pkg_prefix\bin\install.log"
-  Move-Item $dir\* $pkg_prefix\bin
+  Copy-Item $dir\* -Destination  $pkg_prefix\bin -Recurse
 }
